@@ -1,17 +1,44 @@
 {
   "expo": {
-    "name": ".posa-bootstrap",
-    "slug": ".posa-bootstrap",
+    "name": "POSA",
+    "slug": "posa",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
+    "scheme": "posa",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": true
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "POSA uses the camera to scan product barcodes."
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "POSA uses biometrics to unlock the terminal."
+        }
+      ]
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.posa.terminal",
+      "requireFullScreen": false
     },
     "android": {
+      "package": "app.posa.terminal",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0A0E13",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -19,7 +46,13 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png",
+      "name": "POSA — Point of Sale & Retail Operations"
+    },
+    "experiments": {
+      "tsconfigPaths": true
     }
   }
 }
