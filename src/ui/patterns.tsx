@@ -16,12 +16,30 @@
  *   - ListRow: improved hover states and accent treatment.
  */
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Platform, Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { formatMoney, type Minor } from '@/domain/money';
-import { Badge, Box, Button, Dot, Money, Txt, styles as primitives } from './primitives';
-import { palette, radius, spacing, tone, type ToneName } from './theme';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { formatMoney, type Minor } from "@/domain/money";
+import {
+  Badge,
+  Box,
+  Button,
+  Dot,
+  Money,
+  Txt,
+  styles as primitives,
+} from "./primitives";
+import { palette, radius, spacing, tone, type ToneName } from "./theme";
 
 /* ------------------------------------------------------------------ */
 /* KPI tile                                                            */
@@ -31,8 +49,12 @@ export interface StatTileProps {
   label: string;
   value: string;
   monetary?: boolean;
-  delta?: { value: string; direction: 'up' | 'down' | 'flat'; goodWhenUp?: boolean };
-  icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  delta?: {
+    value: string;
+    direction: "up" | "down" | "flat";
+    goodWhenUp?: boolean;
+  };
+  icon?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   toneName?: ToneName;
   hint?: string;
   onPress?: () => void;
@@ -45,7 +67,7 @@ export function StatTile({
   monetary,
   delta,
   icon,
-  toneName = 'neutral',
+  toneName = "neutral",
   hint,
   onPress,
   style,
@@ -53,18 +75,21 @@ export function StatTile({
   const [hovered, setHovered] = useState(false);
   const t = tone(toneName);
   const deltaTone: ToneName =
-    !delta || delta.direction === 'flat'
-      ? 'neutral'
-      : delta.direction === 'up' === (delta.goodWhenUp ?? true)
-        ? 'accent'
-        : 'danger';
+    !delta || delta.direction === "flat"
+      ? "neutral"
+      : (delta.direction === "up") === (delta.goodWhenUp ?? true)
+        ? "accent"
+        : "danger";
 
   const content = (
     <View
       style={[
         styles.statTile,
         hovered && onPress
-          ? { borderColor: palette.borderStrong, backgroundColor: palette.surfaceRaised }
+          ? {
+              borderColor: palette.borderStrong,
+              backgroundColor: palette.surfaceRaised,
+            }
           : null,
         style,
       ]}
@@ -77,22 +102,30 @@ export function StatTile({
           {label.toUpperCase()}
         </Txt>
         {icon ? (
-          <View style={[styles.statIcon, { backgroundColor: t.bg, borderColor: t.border }]}>
+          <View
+            style={[
+              styles.statIcon,
+              { backgroundColor: t.bg, borderColor: t.border },
+            ]}
+          >
             <MaterialCommunityIcons name={icon} size={14} color={t.fg} />
           </View>
         ) : null}
       </Box>
-      <Txt
-        variant={monetary ? 'moneyLg' : 'h1'}
-        color={palette.text}
-        tabular
-      >
+      <Txt variant={monetary ? "moneyLg" : "h1"} color={palette.text} tabular>
         {value}
       </Txt>
       <Box row gap={spacing.sm}>
-        {delta ? <Badge label={delta.value} toneName={deltaTone} compact /> : null}
+        {delta ? (
+          <Badge label={delta.value} toneName={deltaTone} compact />
+        ) : null}
         {hint ? (
-          <Txt variant="caption" color={palette.textFaint} numberOfLines={1} style={primitives.flex}>
+          <Txt
+            variant="caption"
+            color={palette.textFaint}
+            numberOfLines={1}
+            style={primitives.flex}
+          >
             {hint}
           </Txt>
         ) : null}
@@ -123,7 +156,7 @@ export interface Column<T> {
   header: string;
   flex?: number;
   width?: number;
-  align?: 'left' | 'right' | 'center';
+  align?: "left" | "right" | "center";
   render: (row: T, index: number) => React.ReactNode;
 }
 
@@ -150,8 +183,15 @@ export function DataTable<T>({
     <View style={styles.table}>
       <Box row style={styles.tableHeader}>
         {columns.map((column) => (
-          <View key={column.key} style={{ flex: column.flex ?? 1, width: column.width }}>
-            <Txt variant="overline" color={palette.textFaint} align={column.align ?? 'left'}>
+          <View
+            key={column.key}
+            style={{ flex: column.flex ?? 1, width: column.width }}
+          >
+            <Txt
+              variant="overline"
+              color={palette.textFaint}
+              align={column.align ?? "left"}
+            >
               {column.header.toUpperCase()}
             </Txt>
           </View>
@@ -207,11 +247,11 @@ function TableRow<T>({
             flex: column.flex ?? 1,
             width: column.width,
             alignItems:
-              column.align === 'right'
-                ? 'flex-end'
-                : column.align === 'center'
-                  ? 'center'
-                  : 'flex-start',
+              column.align === "right"
+                ? "flex-end"
+                : column.align === "center"
+                  ? "center"
+                  : "flex-start",
           }}
         >
           {column.render(row, index)}
@@ -234,7 +274,7 @@ export interface BarDatum {
 export function BarChart({
   data,
   height = 120,
-  toneName = 'accent',
+  toneName = "accent",
   formatValue = (value: number) => String(value),
   showLabels = true,
 }: {
@@ -260,7 +300,7 @@ export function BarChart({
                     height: `${Math.max(ratio * 100, datum.value > 0 ? 3 : 0)}%`,
                     backgroundColor: datum.highlight ? t.fg : `${t.fg}44`,
                     borderRadius: 5,
-                    width: '100%',
+                    width: "100%",
                   }}
                 />
               </View>
@@ -332,23 +372,27 @@ export function Sheet({
   useEffect(() => {
     if (!visible) return;
     const handler = (event: { key?: string }) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === "Escape") onClose();
     };
-    globalThis.addEventListener?.('keydown', handler as never);
-    return () => globalThis.removeEventListener?.('keydown', handler as never);
+    globalThis.addEventListener?.("keydown", handler as never);
+    return () => globalThis.removeEventListener?.("keydown", handler as never);
   }, [visible, onClose]);
 
   if (!visible) return null;
 
   return (
     <View style={styles.sheetScrim}>
-      <Pressable accessibilityLabel="Close dialog" onPress={onClose} style={StyleSheet.absoluteFill} />
+      <Pressable
+        accessibilityLabel="Close dialog"
+        onPress={onClose}
+        style={StyleSheet.absoluteFill}
+      />
       <Animated.View
         style={[
           styles.sheet,
           {
             width,
-            maxWidth: '94%',
+            maxWidth: "94%",
             opacity: enter,
             transform: [
               {
@@ -365,16 +409,31 @@ export function Sheet({
           <Box style={primitives.flex}>
             <Txt variant="h2">{title}</Txt>
             {subtitle ? (
-              <Txt variant="caption" color={palette.textMuted} style={{ marginTop: 2 }}>
+              <Txt
+                variant="caption"
+                color={palette.textMuted}
+                style={{ marginTop: 2 }}
+              >
                 {subtitle}
               </Txt>
             ) : null}
           </Box>
-          <Pressable accessibilityLabel="Close" onPress={onClose} style={styles.sheetClose}>
-            <MaterialCommunityIcons name="close" size={18} color={palette.textSecondary} />
+          <Pressable
+            accessibilityLabel="Close"
+            onPress={onClose}
+            style={styles.sheetClose}
+          >
+            <MaterialCommunityIcons
+              name="close"
+              size={18}
+              color={palette.textSecondary}
+            />
           </Pressable>
         </Box>
-        <ScrollView style={styles.sheetBody} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.sheetBody}
+          showsVerticalScrollIndicator={false}
+        >
           {children}
         </ScrollView>
         {footer ? <View style={styles.sheetFooter}>{footer}</View> : null}
@@ -387,7 +446,14 @@ export function Sheet({
 /* Scanner indicator                                                   */
 /* ------------------------------------------------------------------ */
 
-export type ScanPhase = 'idle' | 'listening' | 'success' | 'unknown' | 'duplicate' | 'error' | 'blocked';
+export type ScanPhase =
+  | "idle"
+  | "listening"
+  | "success"
+  | "unknown"
+  | "duplicate"
+  | "error"
+  | "blocked";
 
 export interface ScanFeedback {
   phase: ScanPhase;
@@ -407,7 +473,7 @@ export function ScanIndicator({
   const flash = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (feedback.phase === 'listening' || feedback.phase === 'idle') {
+    if (feedback.phase === "listening" || feedback.phase === "idle") {
       const loop = Animated.loop(
         Animated.sequence([
           Animated.timing(sweep, {
@@ -416,7 +482,11 @@ export function ScanIndicator({
             easing: Easing.inOut(Easing.quad),
             useNativeDriver: false,
           }),
-          Animated.timing(sweep, { toValue: 0, duration: 0, useNativeDriver: false }),
+          Animated.timing(sweep, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: false,
+          }),
         ]),
       );
       loop.start();
@@ -427,11 +497,19 @@ export function ScanIndicator({
   }, [feedback.phase, sweep]);
 
   useEffect(() => {
-    if (feedback.phase === 'idle' || feedback.phase === 'listening') return;
+    if (feedback.phase === "idle" || feedback.phase === "listening") return;
     flash.setValue(0);
     Animated.sequence([
-      Animated.timing(flash, { toValue: 1, duration: 60, useNativeDriver: false }),
-      Animated.timing(flash, { toValue: 0.35, duration: 420, useNativeDriver: false }),
+      Animated.timing(flash, {
+        toValue: 1,
+        duration: 60,
+        useNativeDriver: false,
+      }),
+      Animated.timing(flash, {
+        toValue: 0.35,
+        duration: 420,
+        useNativeDriver: false,
+      }),
     ]).start();
   }, [feedback.phase, feedback.at, flash]);
 
@@ -453,13 +531,21 @@ export function ScanIndicator({
           StyleSheet.absoluteFill,
           {
             backgroundColor: t.bg,
-            opacity: flash.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
+            opacity: flash.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            }),
           },
         ]}
         pointerEvents="none"
       />
       <Box row gap={spacing.sm} style={styles.scanRow}>
-        <View style={[styles.scanIconWrap, { backgroundColor: t.bg, borderColor: t.border }]}>
+        <View
+          style={[
+            styles.scanIconWrap,
+            { backgroundColor: t.bg, borderColor: t.border },
+          ]}
+        >
           <MaterialCommunityIcons name={visual.icon} size={16} color={t.fg} />
         </View>
         <Box style={primitives.flex}>
@@ -476,7 +562,8 @@ export function ScanIndicator({
           </Txt>
         ) : null}
       </Box>
-      {(feedback.phase === 'idle' || feedback.phase === 'listening') && !compact ? (
+      {(feedback.phase === "idle" || feedback.phase === "listening") &&
+      !compact ? (
         <Animated.View
           style={[
             styles.scanSweep,
@@ -486,7 +573,14 @@ export function ScanIndicator({
                 inputRange: [0, 0.5, 1],
                 outputRange: [0.15, 0.5, 0.15],
               }),
-              transform: [{ translateX: sweep.interpolate({ inputRange: [0, 1], outputRange: [0, 180] }) }],
+              transform: [
+                {
+                  translateX: sweep.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 180],
+                  }),
+                },
+              ],
             },
           ]}
           pointerEvents="none"
@@ -500,17 +594,25 @@ const SCAN_VISUALS: Record<
   ScanPhase,
   {
     tone: ToneName;
-    icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+    icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
     label: string;
   }
 > = {
-  idle: { tone: 'neutral', icon: 'barcode-scan', label: 'Scanner ready' },
-  listening: { tone: 'accent', icon: 'barcode-scan', label: 'Listening' },
-  success: { tone: 'accent', icon: 'check-circle', label: 'Added' },
-  duplicate: { tone: 'warning', icon: 'content-duplicate', label: 'Already scanned' },
-  unknown: { tone: 'warning', icon: 'help-circle-outline', label: 'Unknown barcode' },
-  blocked: { tone: 'danger', icon: 'block-helper', label: 'Cannot sell' },
-  error: { tone: 'danger', icon: 'alert-circle', label: 'Scan failed' },
+  idle: { tone: "neutral", icon: "barcode-scan", label: "Scanner ready" },
+  listening: { tone: "accent", icon: "barcode-scan", label: "Listening" },
+  success: { tone: "accent", icon: "check-circle", label: "Added" },
+  duplicate: {
+    tone: "warning",
+    icon: "content-duplicate",
+    label: "Already scanned",
+  },
+  unknown: {
+    tone: "warning",
+    icon: "help-circle-outline",
+    label: "Unknown barcode",
+  },
+  blocked: { tone: "danger", icon: "block-helper", label: "Cannot sell" },
+  error: { tone: "danger", icon: "alert-circle", label: "Scan failed" },
 };
 
 export const SCAN_VISUAL_TABLE = SCAN_VISUALS;
@@ -539,13 +641,23 @@ export function ToastStack({
   return (
     <View style={styles.toastStack} pointerEvents="box-none">
       {toasts.map((toast) => (
-        <ToastCard key={toast.id} toast={toast} onDismiss={() => onDismiss(toast.id)} />
+        <ToastCard
+          key={toast.id}
+          toast={toast}
+          onDismiss={() => onDismiss(toast.id)}
+        />
       ))}
     </View>
   );
 }
 
-function ToastCard({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }) {
+function ToastCard({
+  toast,
+  onDismiss,
+}: {
+  toast: Toast;
+  onDismiss: () => void;
+}) {
   const t = tone(toast.toneName);
   const enter = useRef(new Animated.Value(0)).current;
 
@@ -586,13 +698,13 @@ function ToastCard({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
       <View style={[styles.toastIcon, { backgroundColor: t.bg }]}>
         <MaterialCommunityIcons
           name={
-            toast.toneName === 'danger'
-              ? 'alert-circle'
-              : toast.toneName === 'warning'
-                ? 'alert-outline'
-                : toast.toneName === 'accent'
-                  ? 'check-circle'
-                  : 'information-outline'
+            toast.toneName === "danger"
+              ? "alert-circle"
+              : toast.toneName === "warning"
+                ? "alert-outline"
+                : toast.toneName === "accent"
+                  ? "check-circle"
+                  : "information-outline"
           }
           size={16}
           color={t.fg}
@@ -607,10 +719,23 @@ function ToastCard({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
         ) : null}
       </Box>
       {toast.action ? (
-        <Button label={toast.action.label} size="sm" variant="ghost" onPress={toast.action.onPress} />
+        <Button
+          label={toast.action.label}
+          size="sm"
+          variant="ghost"
+          onPress={toast.action.onPress}
+        />
       ) : null}
-      <Pressable accessibilityLabel="Dismiss" onPress={onDismiss} style={styles.toastClose}>
-        <MaterialCommunityIcons name="close" size={15} color={palette.textFaint} />
+      <Pressable
+        accessibilityLabel="Dismiss"
+        onPress={onDismiss}
+        style={styles.toastClose}
+      >
+        <MaterialCommunityIcons
+          name="close"
+          size={15}
+          color={palette.textFaint}
+        />
       </Pressable>
     </Animated.View>
   );
@@ -644,7 +769,7 @@ export function BarcodeGlyph({
   }, [value]);
 
   return (
-    <Box row gap={1} style={{ height, alignItems: 'flex-end' }}>
+    <Box row gap={1} style={{ height, alignItems: "flex-end" }}>
       {bars.map((width, index) => (
         <View
           key={index}
@@ -695,7 +820,9 @@ export function ListRow({
         hovered && onPress ? { backgroundColor: palette.surfaceHover } : null,
       ]}
     >
-      {t ? <View style={[styles.listAccent, { backgroundColor: t.fg }]} /> : null}
+      {t ? (
+        <View style={[styles.listAccent, { backgroundColor: t.fg }]} />
+      ) : null}
       {leading}
       <Box style={primitives.flex}>
         <Txt variant="bodyStrong" numberOfLines={1}>
@@ -718,7 +845,7 @@ export function ListRow({
 
 export function MoneyCell({
   value,
-  currency = 'NGN',
+  currency = "NGN",
   toneName,
 }: {
   value: Minor;
@@ -726,7 +853,11 @@ export function MoneyCell({
   toneName?: ToneName;
 }) {
   return (
-    <Txt variant="moneySm" color={toneName ? tone(toneName).fg : palette.text} tabular>
+    <Txt
+      variant="moneySm"
+      color={toneName ? tone(toneName).fg : palette.text}
+      tabular
+    >
       {formatMoney(value, { currency })}
     </Txt>
   );
@@ -742,7 +873,7 @@ export function StatusStrip({
   items: Array<{
     label: string;
     toneName: ToneName;
-    icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+    icon?: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   }>;
 }) {
   return (
@@ -775,24 +906,24 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingTop: spacing.lg + 4,
     gap: spacing.sm,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   statAccentStrip: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     height: 3,
     borderRadius: 0,
   },
-  statTop: { justifyContent: 'space-between' },
+  statTop: { justifyContent: "space-between" },
   statIcon: {
     width: 28,
     height: 28,
     borderRadius: radius.sm,
     borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   /* Table */
@@ -800,7 +931,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: palette.border,
     borderRadius: radius.lg,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: palette.surface,
   },
   tableHeader: {
@@ -811,8 +942,8 @@ const styles = StyleSheet.create({
     borderBottomColor: palette.border,
   },
   tableRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     borderBottomWidth: 1,
@@ -820,25 +951,25 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   tableRowDense: { paddingVertical: spacing.sm },
-  tableRowAlt: { backgroundColor: 'rgba(255,255,255,0.010)' },
+  tableRowAlt: { backgroundColor: "rgba(255,255,255,0.010)" },
 
   /* Chart */
-  chart: { alignItems: 'flex-end' },
+  chart: { alignItems: "flex-end" },
   chartColumn: { flex: 1 },
-  chartTrack: { flex: 1, justifyContent: 'flex-end', width: '100%' },
-  chartLabels: { alignItems: 'center' },
-  chartScale: { justifyContent: 'flex-end' },
+  chartTrack: { flex: 1, justifyContent: "flex-end", width: "100%" },
+  chartLabels: { alignItems: "center" },
+  chartScale: { justifyContent: "flex-end" },
 
   /* Sheet */
   sheetScrim: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     backgroundColor: palette.overlay,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: spacing.xl,
     zIndex: 40,
   },
@@ -847,15 +978,15 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
     borderWidth: 1,
     borderColor: palette.borderStrong,
-    overflow: 'hidden',
-    maxHeight: '90%',
-    flexDirection: 'column',
+    overflow: "hidden",
+    maxHeight: "90%",
+    flexDirection: "column",
   },
   sheetHeader: {
     padding: spacing.lg,
     borderBottomWidth: 1,
     borderBottomColor: palette.border,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   sheetClose: { padding: 6, borderRadius: radius.sm },
   sheetBody: { padding: spacing.lg, flex: 1, minHeight: 0 },
@@ -863,8 +994,8 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     borderTopWidth: 1,
     borderTopColor: palette.border,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
     gap: spacing.sm,
   },
 
@@ -873,7 +1004,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     borderWidth: 1,
     padding: spacing.md,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   scanIndicatorCompact: { paddingVertical: spacing.sm },
   scanRow: { zIndex: 2 },
@@ -882,14 +1013,14 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: radius.sm,
     borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  scanSweep: { position: 'absolute', bottom: 0, left: 0, width: 60, height: 2 },
+  scanSweep: { position: "absolute", bottom: 0, left: 0, width: 60, height: 2 },
 
   /* Toast */
   toastStack: {
-    position: 'absolute',
+    position: "absolute",
     right: spacing.xl,
     bottom: spacing.xl,
     gap: spacing.sm,
@@ -897,15 +1028,15 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   toast: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.md,
     backgroundColor: palette.surfaceElevated,
     borderWidth: 1,
     borderRadius: radius.lg,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.45,
     shadowRadius: 24,
@@ -914,15 +1045,15 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: radius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   toastClose: { padding: 4 },
 
   /* List row */
   listRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.md,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.md,
