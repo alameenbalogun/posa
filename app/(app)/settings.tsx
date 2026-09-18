@@ -204,8 +204,12 @@ export default function SettingsScreen() {
                   </Txt>
                 </Box>
                 <Badge
-                  label={linked ? "Syncing" : configured ? "Available" : "Local only"}
-                  toneName={linked ? "accent" : configured ? "warning" : "neutral"}
+                  label={
+                    linked ? "Syncing" : configured ? "Available" : "Local only"
+                  }
+                  toneName={
+                    linked ? "accent" : configured ? "warning" : "neutral"
+                  }
                 />
               </Box>
               <Divider />
@@ -245,9 +249,7 @@ export default function SettingsScreen() {
                     toneName={configured ? "info" : "neutral"}
                     icon={configured ? "cloud-outline" : "harddisk"}
                     title={
-                      configured
-                        ? "Automatic sync is ready"
-                        : "Local-only mode"
+                      configured ? "Automatic sync is ready" : "Local-only mode"
                     }
                     message={
                       configured
@@ -256,7 +258,9 @@ export default function SettingsScreen() {
                     }
                   />
                   <Button
-                    label={configured ? "Open Sync Center" : "See what is queued"}
+                    label={
+                      configured ? "Open Sync Center" : "See what is queued"
+                    }
                     variant="secondary"
                     icon="cloud-sync-outline"
                     onPress={() => void app.syncNow()}

@@ -22,10 +22,7 @@ import {
   type PermissionSubject,
 } from "@/domain/permissions";
 import { META_KEYS } from "@/data/local";
-import {
-  createLocalStore,
-  type LocalStore,
-} from "@/data/local";
+import { createLocalStore, type LocalStore } from "@/data/local";
 import { getData, PosaData } from "@/data/repositories";
 import { createWorkspace } from "@/data/workspace";
 import {
@@ -653,7 +650,6 @@ export const useApp = create<AppState>()((set, get) => ({
     });
     await get().bootstrap();
   },
-
 }));
 
 /* ------------------------------------------------------------------ */
